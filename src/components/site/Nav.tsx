@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 const links = [
   { label: "features", href: "#features" },
   { label: "how", href: "#how" },
-  { label: "docs", href: "https://docs.croo.network/", external: true },
+  { label: "docs", href: "/docs" },
 ];
 
 export function Nav() {
