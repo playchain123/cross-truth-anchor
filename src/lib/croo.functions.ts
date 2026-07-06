@@ -32,8 +32,8 @@ async function crooFetch<T>(
   }
   if (!res.ok) {
     const message =
-      parsed?.message || parsed?.error || `CROO API ${res.status}`;
-    throw new Error(`${message} (${res.status})`);
+      parsed?.reason || parsed?.message || parsed?.error || `HTTP ${res.status}`;
+    throw new Error(`CROO: ${message} (${res.status})`);
   }
   return parsed as T;
 }
