@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 
 // Direct fetch to CROO API — extracted from the official SDK
 // Base: https://api.croo.network, Auth header: X-SDK-Key: croo_sk_...
-const CROO_BASE = "https://api.croo.network";
+const CROO_BASE = "https://api.croo.network/backend/v1";
 
 type Method = "GET" | "POST";
 
