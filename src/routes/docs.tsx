@@ -105,7 +105,8 @@ function TocAndBody() {
     ["events", "5 — Live events (WebSocket)"],
     ["send", "6 — Send a test order"],
     ["cli", "7 — CLI (croo-cli)"],
-    ["troubleshoot", "8 — Troubleshooting"],
+    ["verify", "8 — Verify Agent DID (spoof check)"],
+    ["troubleshoot", "9 — Troubleshooting"],
   ];
   return (
     <>
@@ -254,7 +255,63 @@ node bin/croo.mjs watch             # live-tail WebSocket events`}</Code>
         </p>
       </Section>
 
-      <Section id="troubleshoot" n="08" title="Troubleshooting">
+      <Section id="verify" n="08" title="Verify Agent DID (spoof check)">
+        <p>
+          CROO's <b>Layer 1: Identity, Asset &amp; Reputation</b> binds three
+          things into one transferable unit — an ERC-8004 Agent DID NFT, an
+          ERC-4337 Sovereign Vault, and the CROO Merit record. If anyone
+          claims to operate an agent, all three should collapse to the same
+          controlling address. If they don't, someone is spoofing.
+        </p>
+        <p>
+          The console's <b>verify did</b> tab and the CLI's{" "}
+          <code>croo verify</code> command run the exact same resolver:
+        </p>
+        <ol className="list-decimal space-y-1 pl-6">
+          <li>
+            <code>GET /agents/&lt;id&gt;</code> on api.croo.network → extract
+            the off-chain claim (DID, tokenId, vault, owner, chainId).
+          </li>
+          <li>
+            For every EVM chain you pass a RPC for, call{" "}
+            <code>ownerOf(tokenId)</code> on the ERC-8004 DID contract and{" "}
+            <code>eth_getCode(vault)</code> to prove the AA wallet is
+            deployed.
+          </li>
+          <li>
+            Compare the union of discovered addresses with the{" "}
+            <b>claimed operator</b> you pass in.
+          </li>
+        </ol>
+        <p>The verdict is one of:</p>
+        <Code>{`clean          all sources collapse to one address
+spoof_risk     claimed operator conflicts with on-chain owner
+warning        identities span multiple addresses
+inconclusive   missing evidence (no key, no did-contract, or 401)`}</Code>
+        <p>CLI examples:</p>
+        <Code>{`# minimal — hits CROO REST only
+node bin/croo.mjs verify agent_abc123
+
+# strict cross-chain spoof check
+node bin/croo.mjs verify agent_abc123 \\
+  --claimed=0xYourClaimedOperatorAddress \\
+  --did-contract=0xErc8004ContractOnBase \\
+  --rpc=base=https://mainnet.base.org \\
+  --rpc=ethereum=https://ethereum-rpc.publicnode.com
+
+# machine-readable evidence for CI / a bug tracker
+node bin/croo.mjs verify agent_abc123 --claimed=0x... --json > evidence.json`}</Code>
+        <p>
+          Every check hits real endpoints — CROO's backend for the record and
+          each RPC directly for on-chain reads. The full evidence JSON
+          (agent record, per-chain results, address union, verdict reasons)
+          is returned so you can attach it to a dispute or ship it as an
+          audit artifact.
+        </p>
+      </Section>
+
+      <Section id="troubleshoot" n="09" title="Troubleshooting">
+
         <ul className="list-disc space-y-2 pl-6">
           <li>
             <b>SDK_KEY_INVALID (401)</b> — key is wrong, revoked, or not yet

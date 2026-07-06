@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { verifyAgent, type ChainRpc } from "./crooVerify";
 
 // Direct fetch to CROO API — extracted from the official SDK
 // Base: https://api.croo.network, Auth header: X-SDK-Key: croo_sk_...
@@ -168,3 +169,20 @@ export const crooTestKey = createServerFn({ method: "POST" })
       return { ok: false as const, error: (e as Error).message };
     }
   });
+
+/**
+ * Resolve an Agent DID / id, cross-check the ERC-8004 owner on chain,
+ * check the AA vault exists, compare with the caller's claimed operator,
+ * and return the full evidence JSON + spoofing verdict.
+ */
+export const crooVerifyAgent = createServerFn({ method: "POST" })
+  .inputValidator(
+    (d: {
+      sdkKey: string;
+      agentId: string;
+      claimedOperator?: string;
+      didContract?: string;
+      chains?: ChainRpc[];
+    }) => d,
+  )
+  .handler(async ({ data }) => verifyAgent(data));
