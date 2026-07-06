@@ -201,18 +201,37 @@ function ConnectPanel({
   );
 }
 
-type Tab = "negotiations" | "orders" | "send";
+type Tab = "orders" | "negotiations" | "send" | "events";
 
 function Dashboard({ sdkKey }: { sdkKey: string }) {
   const [tab, setTab] = useState<Tab>("orders");
+  const [bump, setBump] = useState(0);
+  const { status, events, clear } = useCrooStream(sdkKey, () => {
+    setBump((n) => n + 1);
+  });
+
   const tabs: { id: Tab; label: string }[] = [
     { id: "orders", label: "orders" },
     { id: "negotiations", label: "negotiations" },
+    { id: "events", label: `events${events.length ? ` (${events.length})` : ""}` },
     { id: "send", label: "send order" },
   ];
 
+  const dot =
+    status === "open"
+      ? "bg-signal"
+      : status === "connecting"
+        ? "bg-yellow-400 animate-pulse"
+        : status === "error"
+          ? "bg-destructive"
+          : "bg-muted-foreground";
+
   return (
     <div>
+      <div className="mb-3 flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+        <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+        websocket · wss://api.croo.network/ws · {status}
+      </div>
       <div className="mb-4 flex gap-px border border-border bg-border">
         {tabs.map((t) => (
           <button
@@ -229,9 +248,51 @@ function Dashboard({ sdkKey }: { sdkKey: string }) {
         ))}
       </div>
 
-      {tab === "orders" && <OrdersPanel sdkKey={sdkKey} />}
-      {tab === "negotiations" && <NegotiationsPanel sdkKey={sdkKey} />}
+      {tab === "orders" && <OrdersPanel sdkKey={sdkKey} bump={bump} />}
+      {tab === "negotiations" && <NegotiationsPanel sdkKey={sdkKey} bump={bump} />}
       {tab === "send" && <SendOrderPanel sdkKey={sdkKey} />}
+      {tab === "events" && <EventsPanel events={events} clear={clear} status={status} />}
+    </div>
+  );
+}
+
+function EventsPanel({
+  events,
+  clear,
+  status,
+}: {
+  events: CrooEvent[];
+  clear: () => void;
+  status: string;
+}) {
+  return (
+    <div>
+      <div className="mb-3 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+        <div>ws status: {status} · {events.length} events (newest first)</div>
+        <button className="hover:text-foreground" onClick={clear}>
+          clear
+        </button>
+      </div>
+      {events.length === 0 && (
+        <EmptyBox message="Waiting for live events from wss://api.croo.network/ws…" />
+      )}
+      <div className="grid gap-2">
+        {events.map((e, i) => (
+          <div key={i} className="border border-border bg-card/40 p-3">
+            <div className="flex items-center justify-between gap-2">
+              <span className="border border-signal/40 bg-background px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-signal">
+                {e.type ?? "event"}
+              </span>
+              <span className="font-mono text-[10px] text-muted-foreground">
+                {e.timestamp}
+              </span>
+            </div>
+            <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap font-mono text-[11px] text-muted-foreground">
+              {JSON.stringify(e, null, 2)}
+            </pre>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
