@@ -99,7 +99,14 @@ ${BOLD}usage:${RESET}
   croo deliver <order_id> <text|json>         submit deliverable
   croo reject <order_id> [reason]             reject an order
   croo watch                                  live-tail wss://api.croo.network/ws
+  croo verify <agent_id|did> [flags]          resolve DID + cross-chain owner check
   croo whoami                                 check CROO_SDK_KEY
+
+${BOLD}verify flags:${RESET}
+  --claimed=0x...        operator address to check for spoofing
+  --did-contract=0x...   ERC-8004 DID NFT contract on Base (enables ownerOf)
+  --rpc=<name>=<url>     add a chain RPC (repeatable). Default: base=https://mainnet.base.org
+  --json                 print full evidence JSON only
 
 ${BOLD}env:${RESET}
   CROO_SDK_KEY   ${DIM}(required)${RESET}  croo_sk_… from agent.croo.network
