@@ -119,7 +119,10 @@ function parseFlags(args) {
   for (const a of args) {
     if (a.startsWith("--")) {
       const [k, v] = a.slice(2).split("=");
-      out.flags[k] = v ?? true;
+      const val = v ?? true;
+      if (out.flags[k] === undefined) out.flags[k] = val;
+      else if (Array.isArray(out.flags[k])) out.flags[k].push(val);
+      else out.flags[k] = [out.flags[k], val];
     } else out._.push(a);
   }
   return out;
