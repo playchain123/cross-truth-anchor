@@ -414,7 +414,7 @@ function OrdersPanel({ sdkKey, bump }: { sdkKey: string; bump: number }) {
   );
 }
 
-function NegotiationsPanel({ sdkKey }: { sdkKey: string }) {
+function NegotiationsPanel({ sdkKey, bump }: { sdkKey: string; bump: number }) {
   const listNegotiations = useServerFn(crooListNegotiations);
   const accept = useServerFn(crooAcceptNegotiation);
 
