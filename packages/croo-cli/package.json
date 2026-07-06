@@ -1,0 +1,17 @@
+{
+  "name": "croo-cli",
+  "version": "0.1.0",
+  "description": "Terminal cockpit for CROO agents — REST + live WebSocket wrapper around api.croo.network.",
+  "type": "module",
+  "bin": {
+    "croo": "./bin/croo.mjs"
+  },
+  "files": ["bin", "src", "README.md"],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "license": "MIT"
+}

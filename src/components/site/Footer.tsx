@@ -3,7 +3,7 @@ export function Footer() {
     <footer className="border-t border-border">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <div className="text-[11px] uppercase tracking-widest text-muted-foreground">
-          CROO CONSOLE · built for the croo hackathon
+          CROO CONSOLE · live cockpit for croo agents
         </div>
         <div className="flex gap-4 text-[11px] uppercase tracking-widest text-muted-foreground">
           <a
