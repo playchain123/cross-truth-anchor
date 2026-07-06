@@ -342,7 +342,7 @@ function OrdersPanel({ sdkKey, bump }: { sdkKey: string; bump: number }) {
     () => listOrders({ data: { sdkKey, pageSize: 25 } }),
     [sdkKey, listOrders],
   );
-  const { data, err, loading, refresh } = usePolling<any>(call, [sdkKey]);
+  const { data, err, loading, refresh } = usePolling<any>(call, [sdkKey, bump]);
 
   const orders: any[] = useMemo(() => normalizeList(data), [data]);
 
