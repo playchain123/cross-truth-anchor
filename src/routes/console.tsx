@@ -254,6 +254,7 @@ function Dashboard({ sdkKey }: { sdkKey: string }) {
       {tab === "negotiations" && <NegotiationsPanel sdkKey={sdkKey} bump={bump} />}
       {tab === "send" && <SendOrderPanel sdkKey={sdkKey} />}
       {tab === "events" && <EventsPanel events={events} clear={clear} status={status} />}
+      {tab === "verify" && <VerifyPanel sdkKey={sdkKey} />}
     </div>
   );
 }
