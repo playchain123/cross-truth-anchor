@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { verifyAgent, type ChainRpc } from "./crooVerify";
 
 // Direct fetch to CROO API — extracted from the official SDK
 // Base: https://api.croo.network, Auth header: X-SDK-Key: croo_sk_...
