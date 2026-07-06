@@ -228,6 +228,68 @@ async function main() {
         print(await api("POST", `/orders/${id}/reject`, { reason }));
         return;
       }
+      case "verify": {
+        requireKey();
+        const id = positional[0] || die("agent_id / did required");
+        const rpcArg = flags.rpc;
+        const rpcList = Array.isArray(rpcArg) ? rpcArg : rpcArg ? [rpcArg] : [];
+        const chains = rpcList.length
+          ? rpcList.map((s) => {
+              const [name, ...rest] = String(s).split("=");
+              const url = rest.join("=");
+              if (!url) die(`--rpc must be name=url (got ${s})`);
+              return { name, url };
+            })
+          : [{ name: "base", url: "https://mainnet.base.org" }];
+        const ev = await verifyAgent({
+          sdkKey: KEY,
+          agentId: id,
+          claimedOperator: flags.claimed || undefined,
+          didContract: flags["did-contract"] || undefined,
+          chains,
+        });
+        if (flags.json) {
+          print(ev);
+          return;
+        }
+        const level = ev.verdict.level;
+        const color =
+          level === "clean"
+            ? GREEN
+            : level === "spoof_risk"
+              ? RED
+              : level === "warning"
+                ? YELLOW
+                : DIM;
+        console.log(`${BOLD}verdict:${RESET} ${color}${level}${RESET} — ${ev.verdict.label}`);
+        ev.verdict.reasons.forEach((r) => console.log(`  ${DIM}·${RESET} ${r}`));
+        console.log(`\n${BOLD}identity:${RESET}`);
+        const ex = ev.agentRecord.extracted || {};
+        console.log(`  did      ${ex.did || "—"}`);
+        console.log(`  tokenId  ${ex.tokenId || "—"}`);
+        console.log(`  vault    ${ex.vault || "—"}`);
+        console.log(`  owner    ${ex.owner || "—"}`);
+        console.log(`  chainId  ${ex.chainId ?? "—"}`);
+        console.log(`\n${BOLD}chain checks:${RESET}`);
+        for (const c of ev.chainChecks) {
+          console.log(`  ${CYAN}${c.chain}${RESET} (${c.rpc})`);
+          if (c.didOwnerOf)
+            console.log(
+              `    ownerOf(${trunc(c.didOwnerOf.tokenId || "?")}) → ${c.didOwnerOf.owner || c.didOwnerOf.error || "—"}`,
+            );
+          if (c.vaultCode)
+            console.log(
+              `    vaultCode(${trunc(c.vaultCode.address || "?")}) → ${c.vaultCode.hasCode ? "deployed" : c.vaultCode.error || "no code"}`,
+            );
+        }
+        console.log(`\n${BOLD}unique addresses:${RESET} ${ev.matches.unique.join(", ") || "—"}`);
+        if (ev.matches.matchesClaimed?.length)
+          console.log(`${GREEN}matches claimed:${RESET} ${ev.matches.matchesClaimed.join(" ")}`);
+        if (ev.matches.conflictsClaimed?.length)
+          console.log(`${RED}conflicts:${RESET} ${ev.matches.conflictsClaimed.join(" ")}`);
+        console.log(`\n${DIM}full evidence: rerun with --json${RESET}`);
+        return;
+      }
       case "watch": {
         requireKey();
         await watch();
