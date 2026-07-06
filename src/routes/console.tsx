@@ -422,7 +422,7 @@ function NegotiationsPanel({ sdkKey, bump }: { sdkKey: string; bump: number }) {
     () => listNegotiations({ data: { sdkKey, pageSize: 25 } }),
     [sdkKey, listNegotiations],
   );
-  const { data, err, loading, refresh } = usePolling<any>(call, [sdkKey]);
+  const { data, err, loading, refresh } = usePolling<any>(call, [sdkKey, bump]);
   const negs: any[] = useMemo(() => normalizeList(data), [data]);
 
   return (
