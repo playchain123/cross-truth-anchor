@@ -1,24 +1,26 @@
 export function Footer() {
   return (
     <footer className="border-t border-border">
-      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center gap-3">
-          <div className="grid h-6 w-6 place-items-center border border-border bg-signal text-[10px] font-bold text-signal-foreground">
-            V
-          </div>
-          <span className="text-xs uppercase tracking-widest text-foreground">
-            Verithread
-          </span>
-          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
-            · built for the Croo Hackathon 2026
-          </span>
+      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="text-[11px] uppercase tracking-widest text-muted-foreground">
+          CROO CONSOLE · built for the croo hackathon
         </div>
-        <div className="flex flex-wrap items-center gap-6 text-[10px] uppercase tracking-widest text-muted-foreground">
-          <a href="#" className="hover:text-foreground">github</a>
-          <a href="#" className="hover:text-foreground">docs</a>
-          <a href="#" className="hover:text-foreground">x / twitter</a>
-          <a href="https://croo.network" target="_blank" rel="noreferrer" className="hover:text-foreground">
-            croo.network ↗
+        <div className="flex gap-4 text-[11px] uppercase tracking-widest text-muted-foreground">
+          <a
+            href="https://docs.croo.network/"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-foreground"
+          >
+            croo docs ↗
+          </a>
+          <a
+            href="https://agent.croo.network/"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-foreground"
+          >
+            agent store ↗
           </a>
         </div>
       </div>
