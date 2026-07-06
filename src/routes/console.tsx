@@ -497,6 +497,253 @@ function NegotiationsPanel({ sdkKey, bump }: { sdkKey: string; bump: number }) {
   );
 }
 
+function VerifyPanel({ sdkKey }: { sdkKey: string }) {
+  const verify = useServerFn(crooVerifyAgent);
+  const [agentId, setAgentId] = useState("");
+  const [claimed, setClaimed] = useState("");
+  const [didContract, setDidContract] = useState("");
+  const [rpcUrl, setRpcUrl] = useState("https://mainnet.base.org");
+  const [rpcName, setRpcName] = useState("base");
+  const [extraChain, setExtraChain] = useState("");
+  const [extraName, setExtraName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [result, setResult] = useState<any>(null);
+
+  const run = async () => {
+    if (!agentId.trim()) return;
+    setLoading(true);
+    setErr(null);
+    setResult(null);
+    try {
+      const chains = [{ name: rpcName || "base", url: rpcUrl.trim() }];
+      if (extraChain.trim())
+        chains.push({ name: extraName || "chain2", url: extraChain.trim() });
+      const r = await verify({
+        data: {
+          sdkKey,
+          agentId: agentId.trim(),
+          claimedOperator: claimed.trim() || undefined,
+          didContract: didContract.trim() || undefined,
+          chains,
+        },
+      });
+      setResult(r);
+    } catch (e) {
+      setErr((e as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const verdict = result?.verdict?.level as string | undefined;
+  const verdictCls =
+    verdict === "clean"
+      ? "border-signal/40 bg-signal/10 text-signal"
+      : verdict === "spoof_risk"
+        ? "border-destructive/60 bg-destructive/10 text-destructive"
+        : verdict === "warning"
+          ? "border-yellow-500/60 bg-yellow-500/10 text-yellow-400"
+          : "border-border bg-card/40 text-muted-foreground";
+
+  return (
+    <div className="grid gap-4">
+      <div className="border border-border bg-card/40 p-5">
+        <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
+          /agents/&lt;id&gt; · cross-chain ownerOf · spoofing verdict
+        </div>
+        <h3 className="mt-1 text-lg font-semibold">Verify Agent DID</h3>
+        <p className="mt-1 font-sans text-xs text-muted-foreground">
+          Resolves the CROO agent record, checks the ERC-8004 owner on each
+          configured EVM chain, compares with a claimed operator address, and
+          returns a verdict + full evidence JSON.
+        </p>
+
+        <div className="mt-4 grid gap-3">
+          <Field label="Agent ID / DID / token id (required)">
+            <input
+              value={agentId}
+              onChange={(e) => setAgentId(e.target.value)}
+              placeholder="agent_… or did:croo:… or 12345"
+              className="w-full border border-border bg-background px-3 py-2 font-mono text-sm focus:border-signal focus:outline-none"
+              spellCheck={false}
+            />
+          </Field>
+          <Field label="Claimed operator address (optional — enables spoof check)">
+            <input
+              value={claimed}
+              onChange={(e) => setClaimed(e.target.value)}
+              placeholder="0x…"
+              className="w-full border border-border bg-background px-3 py-2 font-mono text-sm focus:border-signal focus:outline-none"
+              spellCheck={false}
+            />
+          </Field>
+          <Field label="ERC-8004 DID NFT contract (optional — enables on-chain ownerOf)">
+            <input
+              value={didContract}
+              onChange={(e) => setDidContract(e.target.value)}
+              placeholder="0x… (contract on Base)"
+              className="w-full border border-border bg-background px-3 py-2 font-mono text-sm focus:border-signal focus:outline-none"
+              spellCheck={false}
+            />
+          </Field>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Field label="Chain 1 name">
+              <input
+                value={rpcName}
+                onChange={(e) => setRpcName(e.target.value)}
+                className="w-full border border-border bg-background px-3 py-2 font-mono text-sm focus:border-signal focus:outline-none"
+              />
+            </Field>
+            <Field label="Chain 1 RPC">
+              <input
+                value={rpcUrl}
+                onChange={(e) => setRpcUrl(e.target.value)}
+                className="w-full border border-border bg-background px-3 py-2 font-mono text-sm focus:border-signal focus:outline-none"
+              />
+            </Field>
+            <Field label="Chain 2 name (optional)">
+              <input
+                value={extraName}
+                onChange={(e) => setExtraName(e.target.value)}
+                placeholder="ethereum"
+                className="w-full border border-border bg-background px-3 py-2 font-mono text-sm focus:border-signal focus:outline-none"
+              />
+            </Field>
+            <Field label="Chain 2 RPC (optional)">
+              <input
+                value={extraChain}
+                onChange={(e) => setExtraChain(e.target.value)}
+                placeholder="https://…"
+                className="w-full border border-border bg-background px-3 py-2 font-mono text-sm focus:border-signal focus:outline-none"
+              />
+            </Field>
+          </div>
+        </div>
+
+        <button
+          onClick={run}
+          disabled={loading || !agentId.trim()}
+          className="mt-4 inline-flex items-center border border-border bg-signal px-4 py-2 text-xs font-semibold uppercase tracking-widest text-signal-foreground hover:opacity-90 disabled:opacity-40"
+        >
+          {loading ? "verifying…" : "run verify"}
+        </button>
+        {err && <ErrorBox message={err} />}
+      </div>
+
+      {result && (
+        <>
+          <div className={`border p-4 ${verdictCls}`}>
+            <div className="text-[10px] uppercase tracking-widest opacity-80">
+              verdict · {result.verdict.level}
+            </div>
+            <div className="mt-1 text-lg font-semibold">
+              {result.verdict.label}
+            </div>
+            {result.verdict.reasons?.length > 0 && (
+              <ul className="mt-3 space-y-1 font-mono text-[11px]">
+                {result.verdict.reasons.map((r: string, i: number) => (
+                  <li key={i}>· {r}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="border border-border bg-card/40 p-4">
+              <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                extracted identity
+              </div>
+              <div className="mt-2 space-y-1 font-mono text-xs">
+                <IdRow label="did" v={result.agentRecord?.extracted?.did} />
+                <IdRow label="tokenId" v={result.agentRecord?.extracted?.tokenId} />
+                <IdRow label="vault" v={result.agentRecord?.extracted?.vault} />
+                <IdRow label="owner" v={result.agentRecord?.extracted?.owner} />
+                <IdRow
+                  label="chainId"
+                  v={
+                    result.agentRecord?.extracted?.chainId != null
+                      ? String(result.agentRecord.extracted.chainId)
+                      : null
+                  }
+                />
+              </div>
+            </div>
+            <div className="border border-border bg-card/40 p-4">
+              <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                cross-chain matches
+              </div>
+              <div className="mt-2 font-mono text-xs">
+                <div className="text-muted-foreground">unique addresses:</div>
+                {result.matches.unique.length === 0 ? (
+                  <div className="text-muted-foreground">—</div>
+                ) : (
+                  <ul className="mt-1 space-y-1">
+                    {result.matches.unique.map((a: string) => (
+                      <li key={a} className="break-all text-foreground">
+                        {a}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {result.matches.matchesClaimed?.length > 0 && (
+                  <>
+                    <div className="mt-3 text-signal">matches claimed:</div>
+                    <ul className="mt-1 space-y-1">
+                      {result.matches.matchesClaimed.map((m: string) => (
+                        <li key={m}>· {m}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+                {result.matches.conflictsClaimed?.length > 0 && (
+                  <>
+                    <div className="mt-3 text-destructive">conflicts with claimed:</div>
+                    <ul className="mt-1 space-y-1">
+                      {result.matches.conflictsClaimed.map((m: string) => (
+                        <li key={m}>· {m}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="border border-border bg-card/40 p-4">
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              evidence json
+            </div>
+            <pre className="mt-2 max-h-[420px] overflow-auto whitespace-pre-wrap font-mono text-[11px] text-muted-foreground">
+              {JSON.stringify(result, null, 2)}
+            </pre>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="text-[10px] uppercase tracking-widest text-muted-foreground">
+        {label}
+      </label>
+      <div className="mt-1">{children}</div>
+    </div>
+  );
+}
+
+function IdRow({ label, v }: { label: string; v?: string | null }) {
+  return (
+    <div className="flex gap-2">
+      <span className="w-16 shrink-0 text-muted-foreground">{label}</span>
+      <span className="break-all text-foreground">{v || "—"}</span>
+    </div>
+  );
+}
+
 function SendOrderPanel({ sdkKey }: { sdkKey: string }) {
   const negotiate = useServerFn(crooNegotiate);
   const [serviceId, setServiceId] = useState("");
