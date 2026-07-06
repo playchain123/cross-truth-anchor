@@ -105,7 +105,8 @@ function TocAndBody() {
     ["events", "5 — Live events (WebSocket)"],
     ["send", "6 — Send a test order"],
     ["cli", "7 — CLI (croo-cli)"],
-    ["troubleshoot", "8 — Troubleshooting"],
+    ["verify", "8 — Verify Agent DID (spoof check)"],
+    ["troubleshoot", "9 — Troubleshooting"],
   ];
   return (
     <>
