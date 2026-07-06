@@ -202,7 +202,7 @@ function ConnectPanel({
   );
 }
 
-type Tab = "orders" | "negotiations" | "send" | "events";
+type Tab = "orders" | "negotiations" | "send" | "events" | "verify";
 
 function Dashboard({ sdkKey }: { sdkKey: string }) {
   const [tab, setTab] = useState<Tab>("orders");
@@ -215,6 +215,7 @@ function Dashboard({ sdkKey }: { sdkKey: string }) {
     { id: "orders", label: "orders" },
     { id: "negotiations", label: "negotiations" },
     { id: "events", label: `events${events.length ? ` (${events.length})` : ""}` },
+    { id: "verify", label: "verify did" },
     { id: "send", label: "send order" },
   ];
 
