@@ -35,7 +35,7 @@ export type Evidence = {
   agentRecord: {
     ok: boolean;
     status?: number;
-    raw?: unknown;
+    raw?: any;
     error?: string;
     extracted?: {
       did?: string | null;
