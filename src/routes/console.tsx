@@ -11,6 +11,7 @@ import {
   crooDeliverOrder,
   crooRejectOrder,
   crooGetDelivery,
+  crooVerifyAgent,
 } from "@/lib/croo.functions";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
