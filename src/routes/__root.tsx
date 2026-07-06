@@ -11,7 +11,6 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { WalletProvider } from "../components/wallet/WalletProvider";
 
 function NotFoundComponent() {
   return (
@@ -51,7 +50,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           runtime_error
         </div>
         <h1 className="mt-4 text-xl font-semibold text-foreground">
-          Something halted the resolver.
+          Something halted the console.
         </h1>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -80,21 +79,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Verithread — Cross-Chain Identity Resolver for CAP" },
+      { title: "CROO Console — Real-time dashboard for CROO agents" },
       {
         name: "description",
         content:
-          "Provenance layer for the CROO agent economy. Prove the operator behind a CAP agent is the same entity across chains — and stop Sybil agents before they get hired.",
+          "Paste your CROO SDK key and see every negotiation, order, payment, and delivery your agent handles — live from api.croo.network.",
       },
-      { name: "author", content: "Verithread" },
+      { name: "author", content: "CROO Console" },
       {
         property: "og:title",
-        content: "Verithread — Cross-Chain Identity Resolver for CAP",
+        content: "CROO Console — Real-time dashboard for CROO agents",
       },
       {
         property: "og:description",
         content:
-          "Prove the operator behind a CAP agent across chains. Stop Sybil agents before they get hired.",
+          "Live operator console for CROO. Watch, send, accept, pay, and deliver orders — all from one URL.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -139,9 +138,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WalletProvider>
-        <Outlet />
-      </WalletProvider>
+      <Outlet />
     </QueryClientProvider>
   );
 }

@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 export function Hero() {
   return (
     <section id="top" className="relative overflow-hidden border-b border-border">
@@ -9,45 +11,47 @@ export function Hero() {
       <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-16 sm:px-6 sm:pt-24">
         <div className="mb-6 inline-flex items-center gap-2 border border-border bg-card/60 px-3 py-1.5 text-[10px] uppercase tracking-[0.25em] text-muted-foreground backdrop-blur">
           <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulse" />
-          Croo Hackathon 2026 · CAP compatible
+          Live · api.croo.network · Base L2
         </div>
 
         <h1 className="max-w-5xl text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl md:text-7xl">
-          Proof of{" "}
+          The real-time{" "}
           <span className="relative inline-block">
-            <span className="relative z-10 text-signal">operator</span>
+            <span className="relative z-10 text-signal">console</span>
             <span className="absolute inset-x-0 bottom-1 -z-0 h-3 bg-signal/20" />
           </span>{" "}
-          for every agent on CAP.
+          for your CROO agents.
         </h1>
 
         <p className="mt-8 max-w-2xl font-sans text-base leading-relaxed text-muted-foreground sm:text-lg">
-          Verithread is the cross-chain identity resolver for the CROO agent
-          economy. It links a CAP DID to the human or org behind it — across
-          ENS, EVM history, and other agent protocols — so buyers know who
-          they're really hiring.
+          Paste your SDK key. See every negotiation, order, payment, and
+          delivery your agent handles — as it happens. Send test orders,
+          inspect deliverables, chase stuck states. Built directly on the
+          CROO Node SDK REST surface.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center gap-3">
-          <a
-            href="#attestation"
+          <Link
+            to="/console"
             className="inline-flex items-center gap-2 border border-border bg-signal px-5 py-3 text-xs font-semibold uppercase tracking-widest text-signal-foreground transition-opacity hover:opacity-90"
           >
-            → resolve an agent
-          </a>
+            → open the console
+          </Link>
           <a
-            href="#protocol"
+            href="https://docs.croo.network/developer-docs/quick-start"
+            target="_blank"
+            rel="noreferrer"
             className="inline-flex items-center gap-2 border border-border bg-transparent px-5 py-3 text-xs font-semibold uppercase tracking-widest text-foreground transition-colors hover:bg-secondary"
           >
-            read the spec
+            get an sdk key ↗
           </a>
         </div>
 
         <div className="mt-16 grid max-w-3xl grid-cols-3 gap-px border border-border bg-border">
           {[
-            ["signature", "onchain"],
-            ["ens + did", "linked"],
-            ["sybil", "flagged"],
+            ["negotiations", "live"],
+            ["orders", "streaming"],
+            ["deliveries", "auditable"],
           ].map(([k, v]) => (
             <div key={k} className="bg-background px-4 py-4">
               <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
