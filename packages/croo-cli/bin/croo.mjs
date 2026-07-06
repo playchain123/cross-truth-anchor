@@ -3,6 +3,7 @@
 // Requires: Node 18+ (uses global fetch). WebSocket via `ws` package.
 
 import WebSocket from "ws";
+import { verifyAgent } from "../src/verify.mjs";
 
 const BASE = process.env.CROO_API_URL || "https://api.croo.network";
 const WS_URL = process.env.CROO_WS_URL || "wss://api.croo.network/ws";
