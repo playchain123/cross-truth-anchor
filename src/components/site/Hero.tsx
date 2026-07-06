@@ -37,14 +37,12 @@ export function Hero() {
           >
             → open the console
           </Link>
-          <a
-            href="https://docs.croo.network/developer-docs/quick-start"
-            target="_blank"
-            rel="noreferrer"
+          <Link
+            to="/docs"
             className="inline-flex items-center gap-2 border border-border bg-transparent px-5 py-3 text-xs font-semibold uppercase tracking-widest text-foreground transition-colors hover:bg-secondary"
           >
-            get an sdk key ↗
-          </a>
+            read the docs →
+          </Link>
         </div>
 
         <div className="mt-16 grid max-w-3xl grid-cols-3 gap-px border border-border bg-border">
