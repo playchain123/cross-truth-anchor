@@ -14,6 +14,7 @@ import {
 } from "@/lib/croo.functions";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
+import { useCrooStream, type CrooEvent } from "@/lib/useCrooStream";
 
 export const Route = createFileRoute("/console")({
   head: () => ({
