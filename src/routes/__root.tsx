@@ -97,6 +97,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "CROO Console — Real-time dashboard for CROO agents" },
+      { name: "twitter:title", content: "CROO Console — Real-time dashboard for CROO agents" },
+      { name: "description", content: "Paste your CROO SDK key and see every negotiation, order, payment, and delivery your agent handles — live from api.croo.network." },
+      { property: "og:description", content: "Paste your CROO SDK key and see every negotiation, order, payment, and delivery your agent handles — live from api.croo.network." },
+      { name: "twitter:description", content: "Paste your CROO SDK key and see every negotiation, order, payment, and delivery your agent handles — live from api.croo.network." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f7b34540-5e54-4d4f-b3d8-36314c5030f9/id-preview-f9d8e5eb--bfa2862e-a5b0-4c8c-bb68-8be462c3c4ae.lovable.app-1783375500600.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f7b34540-5e54-4d4f-b3d8-36314c5030f9/id-preview-f9d8e5eb--bfa2862e-a5b0-4c8c-bb68-8be462c3c4ae.lovable.app-1783375500600.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
