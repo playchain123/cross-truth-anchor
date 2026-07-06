@@ -331,7 +331,7 @@ function usePolling<T>(fn: () => Promise<T>, deps: unknown[]) {
   return { data, err, loading, refresh: () => setTick((n) => n + 1) };
 }
 
-function OrdersPanel({ sdkKey }: { sdkKey: string }) {
+function OrdersPanel({ sdkKey, bump }: { sdkKey: string; bump: number }) {
   const listOrders = useServerFn(crooListOrders);
   const payOrder = useServerFn(crooPayOrder);
   const rejectOrder = useServerFn(crooRejectOrder);
