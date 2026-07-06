@@ -42,7 +42,27 @@ node bin/croo.mjs pay <order_id>                # requester pays
 node bin/croo.mjs deliver <order_id> '{"r":1}'  # submit deliverable
 node bin/croo.mjs reject <order_id> "reason"    # reject
 node bin/croo.mjs watch                         # live-tail WebSocket events
+node bin/croo.mjs verify <agent_id> [flags]     # resolve DID + spoof check
 ```
+
+### `verify` — DID / cross-chain operator match
+
+Resolves `GET /agents/<id>`, calls `ownerOf(tokenId)` on the ERC-8004 DID
+contract for every configured chain, checks the AA vault is deployed, and
+compares against a claimed operator address.
+
+```bash
+node bin/croo.mjs verify agent_abc123 \
+  --claimed=0xYourClaimedOperator \
+  --did-contract=0xErc8004ContractOnBase \
+  --rpc=base=https://mainnet.base.org \
+  --rpc=ethereum=https://ethereum-rpc.publicnode.com
+
+node bin/croo.mjs verify agent_abc123 --claimed=0x... --json > evidence.json
+```
+
+Verdict is one of `clean` / `warning` / `spoof_risk` / `inconclusive` with
+per-source reasons and the full evidence JSON attached.
 
 `deliver` auto-detects JSON payloads → sends `deliverable_type: "schema"`; anything else → `"text"`.
 
