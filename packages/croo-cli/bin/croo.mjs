@@ -161,7 +161,7 @@ async function main() {
         requireKey();
         const q = new URLSearchParams({ page: "1", page_size: flags.limit || "20" });
         if (flags.status) q.set("status", flags.status);
-        if (flags.role) q.set("role", flags.role);
+        q.set("role", flags.role || "buyer");
         const data = await api("GET", `/orders/negotiate?${q}`);
         const list = normalizeList(data);
         if (!list.length) return console.log(`${DIM}(no negotiations)${RESET}`);
