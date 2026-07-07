@@ -434,15 +434,15 @@ function OrdersPanel({ sdkKey, bump, role }: { sdkKey: string; bump: number; rol
   );
 }
 
-function NegotiationsPanel({ sdkKey, bump }: { sdkKey: string; bump: number }) {
+function NegotiationsPanel({ sdkKey, bump, role }: { sdkKey: string; bump: number; role: "buyer" | "provider" }) {
   const listNegotiations = useServerFn(crooListNegotiations);
   const accept = useServerFn(crooAcceptNegotiation);
 
   const call = useCallback(
-    () => listNegotiations({ data: { sdkKey, pageSize: 25 } }),
-    [sdkKey, listNegotiations],
+    () => listNegotiations({ data: { sdkKey, pageSize: 25, role } }),
+    [sdkKey, listNegotiations, role],
   );
-  const { data, err, loading, refresh } = usePolling<any>(call, [sdkKey, bump]);
+  const { data, err, loading, refresh } = usePolling<any>(call, [sdkKey, bump, role]);
   const negs: any[] = useMemo(() => normalizeList(data), [data]);
 
   return (
