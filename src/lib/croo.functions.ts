@@ -163,7 +163,7 @@ export const crooTestKey = createServerFn({ method: "POST" })
   .inputValidator((d: KeyInput) => d)
   .handler(async ({ data }) => {
     try {
-      await crooFetch<any>(data.sdkKey, "GET", "/orders?page=1&page_size=1");
+      await crooFetch<any>(data.sdkKey, "GET", "/orders?role=buyer&page=1&page_size=1");
       return { ok: true as const };
     } catch (e) {
       return { ok: false as const, error: (e as Error).message };
