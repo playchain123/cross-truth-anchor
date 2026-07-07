@@ -206,6 +206,7 @@ type Tab = "orders" | "negotiations" | "send" | "events" | "verify";
 
 function Dashboard({ sdkKey }: { sdkKey: string }) {
   const [tab, setTab] = useState<Tab>("orders");
+  const [role, setRole] = useState<"buyer" | "provider">("buyer");
   const [bump, setBump] = useState(0);
   const { status, events, clear } = useCrooStream(sdkKey, () => {
     setBump((n) => n + 1);
@@ -230,9 +231,25 @@ function Dashboard({ sdkKey }: { sdkKey: string }) {
 
   return (
     <div>
-      <div className="mb-3 flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground">
-        <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-        websocket · wss://api.croo.network/ws · {status}
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+          <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+          websocket · wss://api.croo.network/ws · {status}
+        </div>
+        <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+          <span>role</span>
+          <div className="flex gap-px border border-border bg-border">
+            {(["buyer", "provider"] as const).map((r) => (
+              <button
+                key={r}
+                onClick={() => setRole(r)}
+                className={`bg-background px-3 py-1 ${role === r ? "text-signal" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                {r}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
       <div className="mb-4 flex gap-px border border-border bg-border">
         {tabs.map((t) => (
@@ -250,8 +267,8 @@ function Dashboard({ sdkKey }: { sdkKey: string }) {
         ))}
       </div>
 
-      {tab === "orders" && <OrdersPanel sdkKey={sdkKey} bump={bump} />}
-      {tab === "negotiations" && <NegotiationsPanel sdkKey={sdkKey} bump={bump} />}
+      {tab === "orders" && <OrdersPanel sdkKey={sdkKey} bump={bump} role={role} />}
+      {tab === "negotiations" && <NegotiationsPanel sdkKey={sdkKey} bump={bump} role={role} />}
       {tab === "send" && <SendOrderPanel sdkKey={sdkKey} />}
       {tab === "events" && <EventsPanel events={events} clear={clear} status={status} />}
       {tab === "verify" && <VerifyPanel sdkKey={sdkKey} />}
