@@ -351,7 +351,7 @@ function usePolling<T>(fn: () => Promise<T>, deps: unknown[]) {
   return { data, err, loading, refresh: () => setTick((n) => n + 1) };
 }
 
-function OrdersPanel({ sdkKey, bump }: { sdkKey: string; bump: number }) {
+function OrdersPanel({ sdkKey, bump, role }: { sdkKey: string; bump: number; role: "buyer" | "provider" }) {
   const listOrders = useServerFn(crooListOrders);
   const payOrder = useServerFn(crooPayOrder);
   const rejectOrder = useServerFn(crooRejectOrder);
@@ -359,10 +359,10 @@ function OrdersPanel({ sdkKey, bump }: { sdkKey: string; bump: number }) {
   const getDelivery = useServerFn(crooGetDelivery);
 
   const call = useCallback(
-    () => listOrders({ data: { sdkKey, pageSize: 25 } }),
-    [sdkKey, listOrders],
+    () => listOrders({ data: { sdkKey, pageSize: 25, role } }),
+    [sdkKey, listOrders, role],
   );
-  const { data, err, loading, refresh } = usePolling<any>(call, [sdkKey, bump]);
+  const { data, err, loading, refresh } = usePolling<any>(call, [sdkKey, bump, role]);
 
   const orders: any[] = useMemo(() => normalizeList(data), [data]);
 
