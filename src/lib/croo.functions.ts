@@ -47,7 +47,7 @@ export const crooListNegotiations = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const params = new URLSearchParams();
-    if (data.role) params.set("role", data.role);
+    params.set("role", data.role || "buyer");
     if (data.status) params.set("status", data.status);
     params.set("page", "1");
     params.set("page_size", String(data.pageSize ?? 20));
@@ -64,7 +64,7 @@ export const crooListOrders = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const params = new URLSearchParams();
-    if (data.role) params.set("role", data.role);
+    params.set("role", data.role || "buyer");
     if (data.status) params.set("status", data.status);
     params.set("page", "1");
     params.set("page_size", String(data.pageSize ?? 20));
@@ -163,7 +163,7 @@ export const crooTestKey = createServerFn({ method: "POST" })
   .inputValidator((d: KeyInput) => d)
   .handler(async ({ data }) => {
     try {
-      await crooFetch<any>(data.sdkKey, "GET", "/orders?page=1&page_size=1");
+      await crooFetch<any>(data.sdkKey, "GET", "/orders?role=buyer&page=1&page_size=1");
       return { ok: true as const };
     } catch (e) {
       return { ok: false as const, error: (e as Error).message };

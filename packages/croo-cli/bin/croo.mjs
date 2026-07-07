@@ -141,7 +141,7 @@ async function main() {
     switch (cmd) {
       case "whoami": {
         requireKey();
-        const data = await api("GET", "/orders?page=1&page_size=1");
+        const data = await api("GET", "/orders?role=buyer&page=1&page_size=1");
         console.log(`${GREEN}ok${RESET} key accepted by ${BASE}`);
         console.log(`${DIM}sample response:${RESET} ${JSON.stringify(data).slice(0, 200)}…`);
         return;
@@ -150,7 +150,7 @@ async function main() {
         requireKey();
         const q = new URLSearchParams({ page: "1", page_size: flags.limit || "20" });
         if (flags.status) q.set("status", flags.status);
-        if (flags.role) q.set("role", flags.role);
+        q.set("role", flags.role || "buyer");
         const data = await api("GET", `/orders?${q}`);
         const list = normalizeList(data);
         if (!list.length) return console.log(`${DIM}(no orders)${RESET}`);
@@ -161,7 +161,7 @@ async function main() {
         requireKey();
         const q = new URLSearchParams({ page: "1", page_size: flags.limit || "20" });
         if (flags.status) q.set("status", flags.status);
-        if (flags.role) q.set("role", flags.role);
+        q.set("role", flags.role || "buyer");
         const data = await api("GET", `/orders/negotiate?${q}`);
         const list = normalizeList(data);
         if (!list.length) return console.log(`${DIM}(no negotiations)${RESET}`);
