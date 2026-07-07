@@ -141,7 +141,7 @@ async function main() {
     switch (cmd) {
       case "whoami": {
         requireKey();
-        const data = await api("GET", "/orders?page=1&page_size=1");
+        const data = await api("GET", "/orders?role=buyer&page=1&page_size=1");
         console.log(`${GREEN}ok${RESET} key accepted by ${BASE}`);
         console.log(`${DIM}sample response:${RESET} ${JSON.stringify(data).slice(0, 200)}…`);
         return;
