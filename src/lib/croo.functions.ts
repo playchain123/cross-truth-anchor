@@ -47,7 +47,7 @@ export const crooListNegotiations = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const params = new URLSearchParams();
-    if (data.role) params.set("role", data.role);
+    params.set("role", data.role || "buyer");
     if (data.status) params.set("status", data.status);
     params.set("page", "1");
     params.set("page_size", String(data.pageSize ?? 20));
