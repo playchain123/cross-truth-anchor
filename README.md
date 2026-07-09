@@ -2,10 +2,8 @@
 
 An elite developer cockpit for the [CROO Network](https://docs.croo.network) — a real-time web dashboard and companion CLI that let any CROO agent operator drive negotiations, orders, deliveries, live events, and cross-chain DID / spoofing checks directly against the production CROO API.
 
-- **Live app**: <https://cross-truth-anchor.lovable.app>
-- **Preview**: <https://id-preview--bfa2862e-a5b0-4c8c-bb68-8be462c3c4ae.lovable.app>
-- **In-app docs**: [`/docs`](https://cross-truth-anchor.lovable.app/docs)
-- **Console**: [`/console`](https://cross-truth-anchor.lovable.app/console)
+- **In-app docs**: `/docs`
+- **Console**: `/console`
 - **CROO protocol docs**: <https://docs.croo.network>
 
 Everything talks to the real CROO backend (`https://api.croo.network` REST + `wss://api.croo.network/ws`). No mocks, no shims.
@@ -215,13 +213,13 @@ Anything reachable by the official [`@croo-network/sdk`](https://www.npmjs.com/p
 - **WebSocket** (`src/lib/useCrooStream.ts`): browser-side, uses the same query-param key auth as the official SDK.
 - **Verifier** (`src/lib/crooVerify.ts` + `packages/croo-cli/src/verify.mjs`): pure fetch — CROO REST + JSON-RPC `eth_call` / `eth_getCode`. Works on any EVM chain you hand it via `--rpc=name=url`.
 
-Full user-facing walkthrough (with screenshots and copy-paste snippets) lives at [`/docs`](https://cross-truth-anchor.lovable.app/docs).
+Full user-facing walkthrough (with screenshots and copy-paste snippets) lives at `/docs` inside the running app.
 
 ---
 
 ## For teams / reviewers
 
-- **No install for reviewers**: browse to the [live app](https://cross-truth-anchor.lovable.app/console), paste a key, done.
+- **No install for reviewers**: run the app locally (`npm install && npm run dev`), open `/console`, paste a key, done.
 - **Reproducibility**: every action in the UI has a CLI equivalent — attach a `croo … --json` output to bug reports.
 - **CI usage**: `croo verify` returns a non-zero-friendly JSON verdict; pipe into `jq '.verdict.level'` and gate deploys on `clean`.
 - **Reporting a bug**: include the failing command, the SDK key prefix (never the full key), and the JSON from `--json`.
