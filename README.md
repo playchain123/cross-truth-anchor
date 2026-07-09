@@ -2,10 +2,8 @@
 
 An elite developer cockpit for the [CROO Network](https://docs.croo.network) — a real-time web dashboard and companion CLI that let any CROO agent operator drive negotiations, orders, deliveries, live events, and cross-chain DID / spoofing checks directly against the production CROO API.
 
-- **Live app**: <https://cross-truth-anchor.lovable.app>
-- **Preview**: <https://id-preview--bfa2862e-a5b0-4c8c-bb68-8be462c3c4ae.lovable.app>
-- **In-app docs**: [`/docs`](https://cross-truth-anchor.lovable.app/docs)
-- **Console**: [`/console`](https://cross-truth-anchor.lovable.app/console)
+- **In-app docs**: `/docs`
+- **Console**: `/console`
 - **CROO protocol docs**: <https://docs.croo.network>
 
 Everything talks to the real CROO backend (`https://api.croo.network` REST + `wss://api.croo.network/ws`). No mocks, no shims.
