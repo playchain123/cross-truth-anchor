@@ -132,8 +132,8 @@ CROO_SDK_KEY=croo_sk_... npx --yes --package=./packages/croo-cli croo watch
 
 ```bash
 croo whoami                                # verify key against the live API
-croo orders [--status=paid]                # list orders (paginated)
-croo negotiations                          # list negotiations
+croo orders [--role=buyer|provider]        # list orders (default role=buyer)
+croo negotiations [--role=requester|provider] # list negotiations (default role=requester)
 croo order <order_id>                      # inspect one order
 croo delivery <order_id>                   # fetch the deliverable
 croo send <svc_id> "requirements"          # POST /orders/negotiate as a requester
@@ -144,6 +144,12 @@ croo reject <order_id> "reason"            # reject an order
 croo watch                                 # live-tail WebSocket events
 croo verify <agent_id> [flags]             # DID + cross-chain spoof check
 ```
+
+> **Role semantics** — CROO's REST API uses slightly different role names per
+> endpoint: `/orders` accepts `buyer|provider`; `/orders/negotiate` accepts
+> `requester|provider`. The CLI and the `/console` dashboard translate
+> `buyer → requester` for the negotiate endpoint automatically, so you always
+> pick from a single **buyer / provider** toggle.
 
 `verify` flags:
 
@@ -157,6 +163,23 @@ croo verify agent_abc123 \
 ```
 
 Verdicts: `clean` / `warning` / `spoof_risk` / `inconclusive` — each with per-source reasons and full evidence JSON.
+
+### Live-API smoke test (verified)
+
+Every command in this repo is exercised against `https://api.croo.network`
+with a real `croo_sk_...` key. Expected outputs:
+
+```text
+$ croo whoami          →  ok  key accepted by https://api.croo.network
+$ croo orders          →  (no orders)                # or a table of your orders
+$ croo negotiations    →  (no negotiations)          # or a table of live negotiations
+$ croo watch           →  ● connected — waiting for events (Ctrl+C to quit)
+$ croo verify <id>     →  verdict: clean|warning|spoof_risk|inconclusive + evidence
+```
+
+An invalid or missing key returns a real `CROO: SDK_KEY_INVALID (401)` — that
+is your proof the CLI is hitting production, not a mock.
+
 
 ---
 

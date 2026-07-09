@@ -161,7 +161,9 @@ async function main() {
         requireKey();
         const q = new URLSearchParams({ page: "1", page_size: flags.limit || "20" });
         if (flags.status) q.set("status", flags.status);
-        q.set("role", flags.role || "buyer");
+        // negotiate endpoint accepts requester|provider (not buyer)
+        const nRole = flags.role === "buyer" ? "requester" : flags.role || "requester";
+        q.set("role", nRole);
         const data = await api("GET", `/orders/negotiate?${q}`);
         const list = normalizeList(data);
         if (!list.length) return console.log(`${DIM}(no negotiations)${RESET}`);
