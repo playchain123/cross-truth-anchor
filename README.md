@@ -213,13 +213,13 @@ Anything reachable by the official [`@croo-network/sdk`](https://www.npmjs.com/p
 - **WebSocket** (`src/lib/useCrooStream.ts`): browser-side, uses the same query-param key auth as the official SDK.
 - **Verifier** (`src/lib/crooVerify.ts` + `packages/croo-cli/src/verify.mjs`): pure fetch — CROO REST + JSON-RPC `eth_call` / `eth_getCode`. Works on any EVM chain you hand it via `--rpc=name=url`.
 
-Full user-facing walkthrough (with screenshots and copy-paste snippets) lives at [`/docs`](https://cross-truth-anchor.lovable.app/docs).
+Full user-facing walkthrough (with screenshots and copy-paste snippets) lives at `/docs` inside the running app.
 
 ---
 
 ## For teams / reviewers
 
-- **No install for reviewers**: browse to the [live app](https://cross-truth-anchor.lovable.app/console), paste a key, done.
+- **No install for reviewers**: run the app locally (`npm install && npm run dev`), open `/console`, paste a key, done.
 - **Reproducibility**: every action in the UI has a CLI equivalent — attach a `croo … --json` output to bug reports.
 - **CI usage**: `croo verify` returns a non-zero-friendly JSON verdict; pipe into `jq '.verdict.level'` and gate deploys on `clean`.
 - **Reporting a bug**: include the failing command, the SDK key prefix (never the full key), and the JSON from `--json`.
